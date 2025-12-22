@@ -31,7 +31,7 @@ export default function App() {
   
   const panResponder = useMemo(() => PanResponder.create({
     onStartShouldSetPanResponder: () => true,
-    onStartShouldSetPanResponderCapture: () => true,
+    onStartShouldSetPanResponderCapture: () => false,
     onMoveShouldSetPanResponder: () => true,
     onMoveShouldSetPanResponderCapture: () => true,
     onPanResponderMove: (event, gestureState) => {
@@ -69,15 +69,6 @@ export default function App() {
       }
     },
     onPanResponderRelease: (event, gestureState) => {
-      // If it was a tap (minimal movement), increment the count
-      if (Math.abs(gestureState.dx) < 10 && Math.abs(gestureState.dy) < 10) {
-        if (focusedButtonRef.current === 'left') {
-          setCount1(prevCount => prevCount + 1);
-        } else {
-          setCount2(prevCount => prevCount + 1);
-        }
-        scrollToBottom();
-      }
       hasIncremented.current = false;
       hasDecremented.current = false;
       hasSwitchedFocus.current = false;
@@ -145,7 +136,7 @@ export default function App() {
   };
 
   return (
-    <View style={styles.container} {...panResponder.panHandlers}>
+    <View style={styles.container}>
       <TextInput
         ref={inputRef}
         style={styles.hiddenInput}
@@ -160,17 +151,30 @@ export default function App() {
         scrollEnabled={false}
         pointerEvents="none"
       />
+      <View style={styles.scoreButton} {...panResponder.panHandlers}>
+        <TouchableOpacity 
+          style={[styles.leftButton, focusedButton === 'left' && styles.focusedButton]}
+          onPress={() => { setFocusedButton('left'); }}
+          activeOpacity={1}
+        >
+          <Text style={styles.scoreText}>{count1}</Text>
+        </TouchableOpacity>
+      </View>
+      <View style={styles.scoreButton} {...panResponder.panHandlers}>
+        <TouchableOpacity 
+          style={[styles.rightButton, focusedButton === 'right' && styles.focusedButton]}
+          onPress={() => { setFocusedButton('right'); }}
+          activeOpacity={1}
+        >
+          <Text style={styles.scoreText}>{count2}</Text>
+        </TouchableOpacity>
+      </View>
       <TouchableOpacity 
-        style={[styles.scoreButton, styles.leftButton, focusedButton === 'left' && styles.focusedButton]}
-        onPress={() => { setFocusedButton('left'); setCount1(count1 + 1); }}
+        style={styles.resetButton}
+        onPress={() => { setCount1(0); setCount2(0); }}
+        activeOpacity={0.7}
       >
-        <Text style={styles.scoreText}>{count1}</Text>
-      </TouchableOpacity>
-      <TouchableOpacity 
-        style={[styles.scoreButton, styles.rightButton, focusedButton === 'right' && styles.focusedButton]}
-        onPress={() => { setFocusedButton('right'); setCount2(count2 + 1); }}
-      >
-        <Text style={styles.scoreText}>{count2}</Text>
+        <Text style={styles.resetText}>Reset</Text>
       </TouchableOpacity>
       <StatusBar style="light" />
     </View>
@@ -194,14 +198,18 @@ const styles = StyleSheet.create({
   },
   scoreButton: {
     flex: 1,
+  },
+  leftButton: {
+    flex: 1,
+    backgroundColor: '#0066FF',
     alignItems: 'center',
     justifyContent: 'center',
   },
-  leftButton: {
-    backgroundColor: '#0066FF',
-  },
   rightButton: {
+    flex: 1,
     backgroundColor: '#FF0000',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   focusedButton: {
     borderWidth: 8,
@@ -211,5 +219,22 @@ const styles = StyleSheet.create({
     fontSize: 120,
     fontWeight: 'bold',
     color: '#FFFFFF',
+  },
+  resetButton: {
+    position: 'absolute',
+    bottom: 20,
+    left: '50%',
+    transform: [{ translateX: -30 }],
+    backgroundColor: '#333333',
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 20,
+    zIndex: 999,
+    elevation: 10,
+  },
+  resetText: {
+    color: '#FFFFFF',
+    fontSize: 14,
+    fontWeight: '600',
   },
 });
