@@ -222,7 +222,7 @@ const styles = StyleSheet.create({
   },
   resetButton: {
     position: 'absolute',
-    bottom: 20,
+    bottom: 30,
     left: '50%',
     transform: [{ translateX: -30 }],
     backgroundColor: '#333333',
