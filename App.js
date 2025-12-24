@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Button, Platform, TextInput, PanResponder, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, Button, Platform, TextInput, PanResponder, TouchableOpacity, Dimensions } from 'react-native';
 import { useState, useEffect, useRef, useMemo } from 'react';
 
 export default function App() {
@@ -12,6 +12,8 @@ export default function App() {
   const hasDecremented = useRef(false);
   const hasSwitchedFocus = useRef(false);
   const focusedButtonRef = useRef('left');
+  
+  const { width, height } = Dimensions.get('window');
   
   useEffect(() => {
     focusedButtonRef.current = focusedButton;
@@ -137,45 +139,47 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-      <TextInput
-        ref={inputRef}
-        style={styles.hiddenInput}
-        value={inputValue}
-        onChangeText={setInputValue}
-        onKeyPress={handleKeyPress}
-        showSoftInputOnFocus={false}
-        caretHidden={true}
-        contextMenuHidden={true}
-        editable={true}
-        multiline={true}
-        scrollEnabled={false}
-        pointerEvents="none"
-      />
-      <View style={styles.scoreButton} {...panResponder.panHandlers}>
+      <View style={[styles.rotatedContainer, { width: height, height: width }]}>
+        <TextInput
+          ref={inputRef}
+          style={styles.hiddenInput}
+          value={inputValue}
+          onChangeText={setInputValue}
+          onKeyPress={handleKeyPress}
+          showSoftInputOnFocus={false}
+          caretHidden={true}
+          contextMenuHidden={true}
+          editable={true}
+          multiline={true}
+          scrollEnabled={false}
+          pointerEvents="none"
+        />
+        <View style={styles.scoreButton} {...panResponder.panHandlers}>
+          <TouchableOpacity 
+            style={[styles.leftButton, focusedButton === 'left' && styles.focusedButton]}
+            onPress={() => { setFocusedButton('left'); }}
+            activeOpacity={1}
+          >
+            <Text style={styles.scoreText}>{count1}</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.scoreButton} {...panResponder.panHandlers}>
+          <TouchableOpacity 
+            style={[styles.rightButton, focusedButton === 'right' && styles.focusedButton]}
+            onPress={() => { setFocusedButton('right'); }}
+            activeOpacity={1}
+          >
+            <Text style={styles.scoreText}>{count2}</Text>
+          </TouchableOpacity>
+        </View>
         <TouchableOpacity 
-          style={[styles.leftButton, focusedButton === 'left' && styles.focusedButton]}
-          onPress={() => { setFocusedButton('left'); }}
-          activeOpacity={1}
+          style={styles.resetButton}
+          onPress={() => { setCount1(0); setCount2(0); }}
+          activeOpacity={0.7}
         >
-          <Text style={styles.scoreText}>{count1}</Text>
+          <Text style={styles.resetText}>Reset</Text>
         </TouchableOpacity>
       </View>
-      <View style={styles.scoreButton} {...panResponder.panHandlers}>
-        <TouchableOpacity 
-          style={[styles.rightButton, focusedButton === 'right' && styles.focusedButton]}
-          onPress={() => { setFocusedButton('right'); }}
-          activeOpacity={1}
-        >
-          <Text style={styles.scoreText}>{count2}</Text>
-        </TouchableOpacity>
-      </View>
-      <TouchableOpacity 
-        style={styles.resetButton}
-        onPress={() => { setCount1(0); setCount2(0); }}
-        activeOpacity={0.7}
-      >
-        <Text style={styles.resetText}>Reset</Text>
-      </TouchableOpacity>
       <StatusBar style="light" />
     </View>
   );
@@ -184,6 +188,12 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#000',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  rotatedContainer: {
+    transform: [{ rotate: '90deg' }],
     flexDirection: 'row',
     backgroundColor: '#000',
   },
