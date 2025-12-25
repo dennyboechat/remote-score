@@ -2,6 +2,7 @@
   "expo": {
     "name": "remote-score",
     "slug": "remote-score",
+    "owner": "dennyboechat",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -28,6 +29,17 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "5cc30888-4511-4a21-aec9-792ad3ce3529"
+      }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/5cc30888-4511-4a21-aec9-792ad3ce3529"
     }
   }
 }

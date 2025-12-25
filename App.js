@@ -180,7 +180,7 @@ export default function App() {
           <Text style={styles.resetText}>Reset</Text>
         </TouchableOpacity>
       </View>
-      <StatusBar style="light" />
+      <StatusBar style="light" hidden={true} />
     </View>
   );
 }
@@ -222,7 +222,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   focusedButton: {
-    borderWidth: 8,
+    borderWidth: 20,
     borderColor: '#FFFFFF',
   },
   scoreText: {
